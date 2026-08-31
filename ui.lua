@@ -67,6 +67,45 @@ function Library:CreateWindow(titleText)
         end)
     end
 
+    -- Метод для создания переключателя (Вкл/Выкл)
+    function Window:CreateToggle(toggleText, callback)
+        local state = false -- Текущее состояние (выключено по умолчанию)
+    
+        -- Кнопка-основа для переключателя
+        local ToggleButton = Instance.new("TextButton")
+        ToggleButton.Size = UDim2.new(1, 0, 0, 35)
+        ToggleButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        ToggleButton.Text = "  " .. toggleText .. " [ВЫКЛ]"
+        ToggleButton.TextColor3 = Color3.fromRGB(200, 200, 200)
+        ToggleButton.TextXAlignment = Enum.TextXAlignment.Left -- Выравнивание по левому краю
+        ToggleButton.Font = Enum.Font.SourceSans
+        ToggleButton.TextSize = 16
+        ToggleButton.Parent = Container
+    
+        local UICorner = Instance.new("UICorner")
+        UICorner.CornerRadius = UDim.new(0, 6)
+        UICorner.Parent = ToggleButton
+    
+        -- Логика переключения
+        ToggleButton.MouseButton1Click:Connect(function()
+            state = not state -- Меняем true на false или наоборот
+            
+            -- Визуальное обновление
+            if state then
+                ToggleButton.Text = "  " .. toggleText .. " [ВКЛ]"
+                ToggleButton.TextColor3 = Color3.fromRGB(100, 255, 100) -- Зелёный текст
+                ToggleButton.BackgroundColor3 = Color3.fromRGB(70, 80, 70)
+            else
+                ToggleButton.Text = "  " .. toggleText .. " [ВЫКЛ]"
+                ToggleButton.TextColor3 = Color3.fromRGB(200, 200, 200) -- Серый текст
+                ToggleButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+            end
+    
+            -- Передаем новое состояние в callback-функцию
+            pcall(callback, state)
+        end)
+    end
+
     return Window
 end
 
